@@ -1,5 +1,8 @@
 package grupo13.portal_estagios;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="aluno")
 public class Aluno extends Utilizador{
 	public long nAluno;
 	public String nome;
@@ -11,17 +14,11 @@ public class Aluno extends Utilizador{
 			String nome, String dataNascimento, Curso curso) {
 		super(idUtilizador, nomeUtilizador, password, tipoUtilizador);
 		this.nAluno = nAluno;
+		this.tipoUtilizador = "Estudante";
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
 		this.curso = curso;
 	}
-
-	public Aluno(long idUtilizador, String nomeUtilizador, String password) {
-		super(idUtilizador, nomeUtilizador, password, "Estudante");
-		
-		// TODO Auto-generated constructor stub
-	}
-
 	/**
 	 * @return the nAluno
 	 */

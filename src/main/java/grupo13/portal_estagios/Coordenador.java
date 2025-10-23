@@ -1,5 +1,10 @@
 package grupo13.portal_estagios;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="coordenadr")
+
 public class Coordenador extends Utilizador{
 	public long idCoordenador;
 	public String nome;
@@ -12,6 +17,7 @@ public class Coordenador extends Utilizador{
 		super(idUtilizador, nomeUtilizador, password, tipoUtilizador);
 		this.idCoordenador = idCoordenador;
 		idUtilizador = idUtilizador2;
+		this.tipoUtilizador = "Coordenador";
 		this.nome = nome;
 		this.curso = curso;
 	}

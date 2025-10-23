@@ -1,5 +1,10 @@
 package grupo13.portal_estagios;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="candidatura")
+
 public class Candidatura extends OfertaEstagio{
 	public long idCandidatura;
 	public Aluno aluno;

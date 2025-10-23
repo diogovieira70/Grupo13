@@ -1,5 +1,10 @@
 package grupo13.portal_estagios;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="empresa")
+
 public class Empresa extends Utilizador {
 	
 	public long idEmpresa;
@@ -10,6 +15,7 @@ public class Empresa extends Utilizador {
 			String nomeEmpresa, String contacto) {
 		super(idUtilizador, nomeUtilizador, password, tipoUtilizador);
 		this.idEmpresa = idEmpresa;
+		this.tipoUtilizador = "Empresa";
 		this.nomeEmpresa = nomeEmpresa;
 		this.contacto = contacto;
 	}

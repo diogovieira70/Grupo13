@@ -1,6 +1,12 @@
 package grupo13.portal_estagios;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="utilizador")
 public class Utilizador {
+	@Id
+	@Column(name="idUtilizador")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long idUtilizador;
 	public String nomeUtilizador;
 	public String password;

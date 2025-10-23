@@ -1,5 +1,9 @@
 package grupo13.portal_estagios;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="curso")
 public class Curso {
 	public long idCurso;
 	public String nomeCurso;

@@ -1,5 +1,10 @@
 package grupo13.portal_estagios;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="ofertaEstagio")
+
 public class OfertaEstagio {
 	public long idOferta;
 	public String titulo;
