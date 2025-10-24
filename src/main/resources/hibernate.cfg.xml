@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+ "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+ "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+ <!--
+ Root element of the Hibernate configuration file.
+ It defines all settings needed to create the SessionFactory,
+ which manages database connections and entity mappings.
+-->
+<hibernate-configuration>
+ <!--
+ The <session-factory> element groups all configuration properties.
+ Hibernate will read these settings when building the SessionFactory.
+ -->
+
+ <session-factory>
+ <!-- ============================== -->
+ <!-- Database Connection Settings -->
+ <!-- ============================== -->
+
+ <!-- Set the Driver Class - JDBC driver for MySQL
+ This tells Hibernate which database driver to use.-->
+ <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+
+ <!--
+ JDBC URL to connect to the database.
+ - localhost:3306 → MySQL server running on your local machine.
+ - hibernateDemo → name of your database schema.
+createDatabaseIfNotExist=true → automatically creates the database
+ if it does not already exist.
+ -->
+ <property name="connection.url">
+ jdbc:mysql://localhost:3306/hibernateDemo?createDatabaseIfNotExist=true
+ </property>
+
+ <!--
+ Username for the MySQL database connection.
+ Use the same username you configured in MySQL.
+ -->
+ <property name="connection.username">root</property>
+
+ <!-- Set the password - write the pwd you choose when installing MySQL -->
+ <property name="connection.password">admin</property>
+
+ <!-- ============================== -->
+ <!-- Hibernate Behavior Settings -->
+ <!-- ============================== -->
+
+ <!--
+ Controls how Hibernate automatically manages database tables.
+ Options:
+ - validate: verify schema matches entities (no changes)
+ - update: update schema automatically
+ - create: drop and recreate tables at startup
+ - create-drop: same as create, but drops tables at shutdown
+ -->
+ <property name="hibernate.hbm2ddl.auto">update</property>
+
+ <!--
+ Displays generated SQL commands in the console.
+ Useful for debugging and understanding what Hibernate executes.
+ -->
+ <property name="show_sql">true</property>
+<!-- ============================== -->
+ <!-- Mapped Entity Classes -->
+ <!-- ============================== -->
+ <!--
+ List all annotated entity classes used by Hibernate.
+ Each class must include its full package name.
+ -->
+ <mapping class="upt.lp.hibernateintro.Course" />
+ <mapping class="upt.lp.hibernateintro.Student" />
+ </session-factory>
+</hibernate-configuration>
