@@ -2,28 +2,17 @@
 <hibernate-configuration>
   <session-factory>
 
-    <!-- JDBC / MySQL 8 -->
     <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-    <property name="hibernate.connection.url">
-      jdbc:mysql://localhost:3306/portalestagiosDB
-        ?createDatabaseIfNotExist=true
-        &amp;useSSL=false
-        &amp;allowPublicKeyRetrieval=true
-        &amp;serverTimezone=UTC
-        &amp;useUnicode=true
-        &amp;characterEncoding=utf8
-    </property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/portalestagiosDB?createDatabaseIfNotExist=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=utf8</property>
     <property name="hibernate.connection.username">portal_user</property>
     <property name="hibernate.connection.password">portal_pwd</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
 
-    <!-- Dev -->
     <property name="hibernate.hbm2ddl.auto">update</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.format_sql">true</property>
     <property name="hibernate.jdbc.time_zone">UTC</property>
 
-    <!-- ===== MAPEAMENTOS DAS ENTIDADES (ANOTAÇÕES JPA) ===== -->
     <mapping class="pt.upt.equipa13.portalestagios.model.Empresa"/>
     <mapping class="pt.upt.equipa13.portalestagios.model.OfertaEstagio"/>
     <mapping class="pt.upt.equipa13.portalestagios.model.Aluno"/>
