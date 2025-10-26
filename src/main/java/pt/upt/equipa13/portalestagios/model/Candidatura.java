@@ -1,5 +1,6 @@
-package grupo13.portal_estagios;
+package pt.upt.equipa13.portalestagios.model;
 
+import grupo13.portal_estagios.Coordenador;
 import jakarta.persistence.*;
 
 @Entity
