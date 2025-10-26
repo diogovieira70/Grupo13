@@ -1,84 +1,51 @@
 package pt.upt.equipa13.portalestagios.model;
 
-import grupo13.portal_estagios.Utilizador;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+/** Entidade Empresa: oferece estágios (OfertaEstagio). */
 @Entity
-@Table(name="empresa")
+@Table(name = "empresas", uniqueConstraints = @UniqueConstraint(columnNames = "nif"))
+public class Empresa {
 
-public class Empresa extends Utilizador {
-	
-	public long idEmpresa;
-	public String nomeEmpresa;
-	public String contacto;
-	
-	public Empresa(long idUtilizador, String nomeUtilizador, String password, String tipoUtilizador, long idEmpresa,
-			String nomeEmpresa, String contacto) {
-		super(idUtilizador, nomeUtilizador, password, tipoUtilizador);
-		this.idEmpresa = idEmpresa;
-		this.tipoUtilizador = "Empresa";
-		this.nomeEmpresa = nomeEmpresa;
-		this.contacto = contacto;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	/**
-	 * @return the idEmpresa
-	 */
-	public long getIdEmpresa() {
-		return idEmpresa;
-	}
+    @Column(nullable=false)             private String nome;
+    @Column(nullable=false, length=9)   private String nif;     // 9 dígitos
+    @Column(nullable=false)             private String email;
+                                       private String website;
 
-	/**
-	 * @param idEmpresa the idEmpresa to set
-	 */
-	public void setIdEmpresa(long idEmpresa) {
-		this.idEmpresa = idEmpresa;
-	}
+    /** Uma Empresa tem várias Ofertas de Estágio. */
+    @OneToMany(mappedBy = "empresa",
+               cascade = CascadeType.ALL,
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
+    private List<OfertaEstagio> ofertas = new ArrayList<>();
 
-	/**
-	 * @return the nomeEmpresa
-	 */
-	public String getNomeEmpresa() {
-		return nomeEmpresa;
-	}
+    public Empresa() {}
 
-	/**
-	 * @param nomeEmpresa the nomeEmpresa to set
-	 */
-	public void setNomeEmpresa(String nomeEmpresa) {
-		this.nomeEmpresa = nomeEmpresa;
-	}
+    // Helpers de associação (mantêm os dois lados coerentes)
+    public void addOferta(OfertaEstagio oferta) {
+        ofertas.add(oferta);
+        oferta.setEmpresa(this);
+    }
+    public void removeOferta(OfertaEstagio oferta) {
+        ofertas.remove(oferta);
+        oferta.setEmpresa(null);
+    }
 
-	/**
-	 * @return the contacto
-	 */
-	public String getContacto() {
-		return contacto;
-	}
+    // Getters/Setters
+    public Long getId() { return id; }
+    public String getNome() { return nome; }           public void setNome(String nome) { this.nome = nome; }
+    public String getNif() { return nif; }             public void setNif(String nif) { this.nif = nif; }
+    public String getEmail() { return email; }         public void setEmail(String email) { this.email = email; }
+    public String getWebsite() { return website; }     public void setWebsite(String website) { this.website = website; }
+    public List<OfertaEstagio> getOfertas() { return ofertas; }
 
-	/**
-	 * @param contacto the contacto to set
-	 */
-	public void setContacto(String contacto) {
-		this.contacto = contacto;
-	}
-
-	@Override
-	public String toString() {
-		return "Empresa [idEmpresa=" + idEmpresa + ", nomeEmpresa=" + nomeEmpresa + ", contacto=" + contacto
-				+ ", idUtilizador=" + idUtilizador + ", nomeUtilizador=" + nomeUtilizador + ", password=" + password
-				+ ", tipoUtilizador=" + tipoUtilizador + "]";
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
+    @Override public String toString() {
+        return "Empresa#" + id + " " + nome + " (" + nif + ")";
+    }
 }

@@ -1,156 +1,43 @@
 package pt.upt.equipa13.portalestagios.model;
 
-import grupo13.portal_estagios.Coordenador;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
+/** Entidade Candidatura: ligação Aluno ↔ OfertaEstagio e o seu estado. */
 @Entity
-@Table(name="candidatura")
+@Table(name = "candidaturas")
+public class Candidatura {
 
-public class Candidatura extends OfertaEstagio{
-	public long idCandidatura;
-	public Aluno aluno;
-	public Empresa empresa;
-	public String titulo;
-	public String detalhes;
-	public String tipoEstagio;
-	public String estadoOferta;
-	
-	
-	public Candidatura(long idOferta, String titulo, String detalhes, String tipoEstagio, String estadoOferta,
-			Coordenador coordenador, Empresa empresa, long idCandidatura, Aluno aluno, Empresa empresa2, String titulo2,
-			String detalhes2, String tipoEstagio2, String estadoOferta2) {
-		super(idOferta, titulo, detalhes, tipoEstagio, estadoOferta, coordenador, empresa);
-		this.idCandidatura = idCandidatura;
-		this.aluno = aluno;
-		empresa = empresa2;
-		titulo = titulo2;
-		detalhes = detalhes2;
-		tipoEstagio = tipoEstagio2;
-		estadoOferta = estadoOferta2;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    /** Data de submissão (por omissão: hoje). */
+    @Column(nullable=false)
+    private LocalDate data = LocalDate.now();
 
-	/**
-	 * @return the idCandidatura
-	 */
-	public long getIdCandidatura() {
-		return idCandidatura;
-	}
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
+    private EstadoCandidatura estado = EstadoCandidatura.SUBMETIDA;
 
+    /** Muitas candidaturas pertencem a um Aluno. */
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    private Aluno aluno;
 
-	/**
-	 * @param idCandidatura the idCandidatura to set
-	 */
-	public void setIdCandidatura(long idCandidatura) {
-		this.idCandidatura = idCandidatura;
-	}
+    /** Muitas candidaturas pertencem a uma OfertaEstagio. */
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    private OfertaEstagio oferta;
 
+    public Candidatura() {}
 
-	/**
-	 * @return the aluno
-	 */
-	public Aluno getAluno() {
-		return aluno;
-	}
+    // Getters/Setters
+    public Long getId() { return id; }
+    public LocalDate getData() { return data; }
+    public EstadoCandidatura getEstado() { return estado; }   public void setEstado(EstadoCandidatura estado) { this.estado = estado; }
+    public Aluno getAluno() { return aluno; }                 public void setAluno(Aluno aluno) { this.aluno = aluno; }
+    public OfertaEstagio getOferta() { return oferta; }       public void setOferta(OfertaEstagio oferta) { this.oferta = oferta; }
 
-
-	/**
-	 * @param aluno the aluno to set
-	 */
-	public void setAluno(Aluno aluno) {
-		this.aluno = aluno;
-	}
-
-
-	/**
-	 * @return the empresa
-	 */
-	public Empresa getEmpresa() {
-		return empresa;
-	}
-
-
-	/**
-	 * @param empresa the empresa to set
-	 */
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
-	}
-
-
-	/**
-	 * @return the titulo
-	 */
-	public String getTitulo() {
-		return titulo;
-	}
-
-
-	/**
-	 * @param titulo the titulo to set
-	 */
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-
-	/**
-	 * @return the detalhes
-	 */
-	public String getDetalhes() {
-		return detalhes;
-	}
-
-
-	/**
-	 * @param detalhes the detalhes to set
-	 */
-	public void setDetalhes(String detalhes) {
-		this.detalhes = detalhes;
-	}
-
-
-	/**
-	 * @return the tipoEstagio
-	 */
-	public String getTipoEstagio() {
-		return tipoEstagio;
-	}
-
-
-	/**
-	 * @param tipoEstagio the tipoEstagio to set
-	 */
-	public void setTipoEstagio(String tipoEstagio) {
-		this.tipoEstagio = tipoEstagio;
-	}
-
-
-	/**
-	 * @return the estadoOferta
-	 */
-	public String getEstadoOferta() {
-		return estadoOferta;
-	}
-
-
-	/**
-	 * @param estadoOferta the estadoOferta to set
-	 */
-	public void setEstadoOferta(String estadoOferta) {
-		this.estadoOferta = estadoOferta;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Candidatura [idCandidatura=" + idCandidatura + ", aluno=" + aluno + ", empresa=" + empresa + ", titulo="
-				+ titulo + ", detalhes=" + detalhes + ", tipoEstagio=" + tipoEstagio + ", estadoOferta=" + estadoOferta
-				+ ", idOferta=" + idOferta + ", coordenador=" + coordenador + "]";
-	}
-	
-	
-	
-	
-
+    @Override public String toString() {
+        return "Candidatura#" + id + " " + estado + " (" + data + ")";
+    }
 }

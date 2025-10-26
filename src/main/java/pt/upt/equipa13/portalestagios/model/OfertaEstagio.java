@@ -1,141 +1,68 @@
 package pt.upt.equipa13.portalestagios.model;
 
-import grupo13.portal_estagios.Coordenador;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+/** Entidade OfertaEstagio: proposta de estágio publicada por uma Empresa. */
 @Entity
-@Table(name="ofertaEstagio")
-
+@Table(name = "ofertas_estagio")
 public class OfertaEstagio {
-	public long idOferta;
-	public String titulo;
-	public String detalhes;
-	public String tipoEstagio;
-	public String estadoOferta;
-	
-	public Coordenador coordenador;
-	public Empresa empresa;
-	
-	public OfertaEstagio(long idOferta, String titulo, String detalhes, String tipoEstagio, String estadoOferta,
-			Coordenador coordenador, Empresa empresa) {
-		super();
-		this.idOferta = idOferta;
-		this.titulo = titulo;
-		this.detalhes = detalhes;
-		this.tipoEstagio = tipoEstagio;
-		this.estadoOferta = estadoOferta;
-		this.coordenador = coordenador;
-		this.empresa = empresa;
-	}
 
-	/**
-	 * @return the idOferta
-	 */
-	public long getIdOferta() {
-		return idOferta;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	/**
-	 * @param idOferta the idOferta to set
-	 */
-	public void setIdOferta(long idOferta) {
-		this.idOferta = idOferta;
-	}
+    @Column(nullable=false)               private String titulo;
+    @Column(nullable=false, length=2000)  private String descricao;
+    @Column(nullable=false)               private String area;
 
-	/**
-	 * @return the titulo
-	 */
-	public String getTitulo() {
-		return titulo;
-	}
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
+    private EstadoOferta estado = EstadoOferta.ABERTA;
 
-	/**
-	 * @param titulo the titulo to set
-	 */
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
+    @Column(nullable=false, updatable=false)
+    private LocalDateTime createdAt;
 
-	/**
-	 * @return the detalhes
-	 */
-	public String getDetalhes() {
-		return detalhes;
-	}
+    /** Muitas ofertas pertencem a uma empresa. */
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    private Empresa empresa;
 
-	/**
-	 * @param detalhes the detalhes to set
-	 */
-	public void setDetalhes(String detalhes) {
-		this.detalhes = detalhes;
-	}
+    /** Uma oferta pode ter várias candidaturas associadas. */
+    @OneToMany(mappedBy = "oferta",
+               cascade = CascadeType.ALL,
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
+    private List<Candidatura> candidaturas = new ArrayList<>();
 
-	/**
-	 * @return the tipoEstagio
-	 */
-	public String getTipoEstagio() {
-		return tipoEstagio;
-	}
+    public OfertaEstagio() {}
 
-	/**
-	 * @param tipoEstagio the tipoEstagio to set
-	 */
-	public void setTipoEstagio(String tipoEstagio) {
-		this.tipoEstagio = tipoEstagio;
-	}
+    // Define createdAt automaticamente na inserção
+    @PrePersist
+    private void onCreate() { this.createdAt = LocalDateTime.now(); }
 
-	/**
-	 * @return the estadoOferta
-	 */
-	public String getEstadoOferta() {
-		return estadoOferta;
-	}
+    // Helpers de associação
+    public void addCandidatura(Candidatura c) {
+        candidaturas.add(c);
+        c.setOferta(this);
+    }
+    public void removeCandidatura(Candidatura c) {
+        candidaturas.remove(c);
+        c.setOferta(null);
+    }
 
-	/**
-	 * @param estadoOferta the estadoOferta to set
-	 */
-	public void setEstadoOferta(String estadoOferta) {
-		this.estadoOferta = estadoOferta;
-	}
+    // Getters/Setters
+    public Long getId() { return id; }
+    public String getTitulo() { return titulo; }           public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getDescricao() { return descricao; }     public void setDescricao(String descricao) { this.descricao = descricao; }
+    public String getArea() { return area; }               public void setArea(String area) { this.area = area; }
+    public EstadoOferta getEstado() { return estado; }     public void setEstado(EstadoOferta estado) { this.estado = estado; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public Empresa getEmpresa() { return empresa; }        public void setEmpresa(Empresa empresa) { this.empresa = empresa; }
+    public List<Candidatura> getCandidaturas() { return candidaturas; }
 
-	/**
-	 * @return the coordenador
-	 */
-	public Coordenador getCoordenador() {
-		return coordenador;
-	}
-
-	/**
-	 * @param coordenador the coordenador to set
-	 */
-	public void setCoordenador(Coordenador coordenador) {
-		this.coordenador = coordenador;
-	}
-
-	/**
-	 * @return the empresa
-	 */
-	public Empresa getEmpresa() {
-		return empresa;
-	}
-
-	/**
-	 * @param empresa the empresa to set
-	 */
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
-	}
-
-	@Override
-	public String toString() {
-		return "OfertaEstagio [idOferta=" + idOferta + ", titulo=" + titulo + ", detalhes=" + detalhes
-				+ ", tipoEstagio=" + tipoEstagio + ", estadoOferta=" + estadoOferta + ", coordenador=" + coordenador
-				+ ", empresa=" + empresa + "]";
-	}
-	
-	
-	
-	
-	
-
+    @Override public String toString() {
+        return "OfertaEstagio#" + id + " " + titulo + " [" + area + "]";
+    }
 }

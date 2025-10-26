@@ -1,88 +1,51 @@
 package pt.upt.equipa13.portalestagios.model;
-import grupo13.portal_estagios.Curso;
-import grupo13.portal_estagios.Utilizador;
+
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+/** Entidade Aluno: candidato aos estágios. */
 @Entity
-@Table(name="aluno")
-public class Aluno extends Utilizador{
-	public long nAluno;
-	public String nome;
-	public String dataNascimento;
-	
-	public Curso curso;
-	
-	public Aluno(long idUtilizador, String nomeUtilizador, String password, String tipoUtilizador, long nAluno,
-			String nome, String dataNascimento, Curso curso) {
-		super(idUtilizador, nomeUtilizador, password, tipoUtilizador);
-		this.nAluno = nAluno;
-		this.tipoUtilizador = "Estudante";
-		this.nome = nome;
-		this.dataNascimento = dataNascimento;
-		this.curso = curso;
-	}
-	/**
-	 * @return the nAluno
-	 */
-	public long getnAluno() {
-		return nAluno;
-	}
+@Table(name = "alunos", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+public class Aluno {
 
-	/**
-	 * @param nAluno the nAluno to set
-	 */
-	public void setnAluno(long nAluno) {
-		this.nAluno = nAluno;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	/**
-	 * @return the nome
-	 */
-	public String getNome() {
-		return nome;
-	}
+    @Column(nullable=false)               private String  nome;
+    @Column(nullable=false, unique=true)  private String  email;
+    @Column(nullable=false)               private Integer numero;
+                                          private String  curso;
 
-	/**
-	 * @param nome the nome to set
-	 */
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    /** Um Aluno pode ter várias Candidaturas. */
+    @OneToMany(mappedBy = "aluno",
+               cascade = CascadeType.ALL,
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
+    private List<Candidatura> candidaturas = new ArrayList<>();
 
-	/**
-	 * @return the dataNascimento
-	 */
-	public String getDataNascimento() {
-		return dataNascimento;
-	}
+    public Aluno() {}
 
-	/**
-	 * @param dataNascimento the dataNascimento to set
-	 */
-	public void setDataNascimento(String dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
+    // Helpers de associação
+    public void addCandidatura(Candidatura c) {
+        candidaturas.add(c);
+        c.setAluno(this);
+    }
+    public void removeCandidatura(Candidatura c) {
+        candidaturas.remove(c);
+        c.setAluno(null);
+    }
 
+    // Getters/Setters
+    public Long getId() { return id; }
+    public String getNome() { return nome; }            public void setNome(String nome) { this.nome = nome; }
+    public String getEmail() { return email; }          public void setEmail(String email) { this.email = email; }
+    public Integer getNumero() { return numero; }       public void setNumero(Integer numero) { this.numero = numero; }
+    public String getCurso() { return curso; }          public void setCurso(String curso) { this.curso = curso; }
+    public List<Candidatura> getCandidaturas() { return candidaturas; }
 
-	/**
-	 * @return the curso
-	 */
-	public Curso getCurso() {
-		return curso;
-	}
-
-	/**
-	 * @param curso the curso to set
-	 */
-	public void setCurso(Curso curso) {
-		this.curso = curso;
-	}
-
-	@Override
-	public String toString() {
-		return "Aluno [nAluno=" + nAluno + ", nome=" + nome + ", dataNascimento=" + dataNascimento + ", curso=" + curso
-				+ ", idUtilizador=" + idUtilizador + ", nomeUtilizador=" + nomeUtilizador + ", password=" + password
-				+ ", tipoUtilizador=" + tipoUtilizador + "]";
-	}
-	
+    @Override public String toString() {
+        return "Aluno#" + id + " " + nome + " (" + numero + ")";
+    }
 }
